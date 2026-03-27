@@ -10,17 +10,23 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+@Order(2)
 @Aspect
 @Component
 public class GreetingAspect {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Before("execution(String com.example.app.aop.springboot_aop.services.GreetingService.sayHello(..))")
+    @Pointcut("execution(String com.example.app.aop.springboot_aop.services.GreetingService.sayHello(..))")
+    private void greetingLoggerPointCut(){};
+
+    @Before("greetingLoggerPointCut()")
     public void loggerBefore(JoinPoint joinPoint){
 
         String method = joinPoint.getSignature().getName();
@@ -28,6 +34,7 @@ public class GreetingAspect {
         logger.info("Antes: " + method + " con los argumentos " + args);
 
     }
+
     @After("execution(String com.example.app.aop.springboot_aop.services.GreetingService.sayHello(..))")
     public void loggerAfter(JoinPoint joinPoint){
 
